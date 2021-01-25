@@ -51,6 +51,18 @@ function App() {
 		console.log(tarea);
 	};
 
+	const eliminar = async (id) => {
+		try {
+			const db = firebase.firestore();
+			await db.collection('tareas').doc(id).delete();
+
+			const arrayFiltrado = tareas.filter((item) => item.id !== id);
+			setTareas(arrayFiltrado);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<div className="container mt-3">
 			<div className="row">
@@ -59,6 +71,15 @@ function App() {
 						{tareas.map((item) => (
 							<li className="list-group-item" key={item.id}>
 								{item.name}
+								<button
+									className="btn btn-danger btn-sm float-right"
+									onClick={() => eliminar(item.id)}
+								>
+									Eliminar
+								</button>
+								<button className="btn btn-warning btn-sm float-right mr-2">
+									Editar
+								</button>
 							</li>
 						))}
 					</ul>
