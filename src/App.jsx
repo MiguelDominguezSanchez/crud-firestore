@@ -4,6 +4,8 @@ import { firebase } from './firebase';
 function App() {
 	const [tareas, setTareas] = React.useState([]);
 	const [tarea, setTarea] = React.useState('');
+	const [modoEdicion, setModoEdicion] = React.useState(false);
+	const [id, setId] = React.useState('');
 
 	React.useEffect(() => {
 		const obtenerDatos = async () => {
@@ -63,6 +65,16 @@ function App() {
 		}
 	};
 
+	const activarEdicion = (item) => {
+		setModoEdicion(true);
+		setTarea(item.name);
+		setId(item.id);
+	};
+
+	const editar = async (e) => {
+		e.preventDefault();
+	};
+
 	return (
 		<div className="container mt-3">
 			<div className="row">
@@ -77,7 +89,10 @@ function App() {
 								>
 									Eliminar
 								</button>
-								<button className="btn btn-warning btn-sm float-right mr-2">
+								<button
+									className="btn btn-warning btn-sm float-right mr-2"
+									onClick={() => activarEdicion(item)}
+								>
 									Editar
 								</button>
 							</li>
@@ -85,8 +100,8 @@ function App() {
 					</ul>
 				</div>
 				<div className="col-md-6">
-					<h3>Formulario</h3>
-					<form onSubmit={agregar}>
+					<h3>{modoEdicion ? 'Editar tarea' : 'Agregar Tarea'}</h3>
+					<form onSubmit={modoEdicion ? editar : agregar}>
 						<input
 							type="text"
 							placeholder="Ingrese tarea"
@@ -94,8 +109,15 @@ function App() {
 							onChange={(e) => setTarea(e.target.value)}
 							value={tarea}
 						/>
-						<button className="btn btn-dark btn-block" type="submit">
-							Agregar
+						<button
+							className={
+								modoEdicion
+									? 'btn btn-warning btn-block'
+									: 'btn btn-dark btn-block'
+							}
+							type="submit"
+						>
+							{modoEdicion ? 'Editar' : 'Agregar'}
 						</button>
 					</form>
 				</div>
